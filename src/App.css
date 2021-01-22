@@ -1,38 +1,53 @@
-.App {
+.table-drag-select {
+  /* Stretch horizontally to fill parent */
+  width: 30;
+  /* Keep columns same width */
+  table-layout: fixed;
+  /* Disable text selection */
+  user-select: none;
+  /* Center in parent */
+  margin-left: auto;
+  margin-right: auto;
+  /* Remove space between border */
+  border-collapse: collapse;
+}
+
+/* Table cells */
+.table-drag-select td {
   text-align: center;
+  /* Cut off long strings of text with ... */
+  text-overflow: ellipsis;
+  overflow: hidden;
+  /* Make transparent gaps between cells. Better than relying on margin
+   * because clicking an element's margin doesn't trigger events */
+  border: 0.1rem solid black;
+  background-clip: padding-box;
+  /* Make cells reasonable size */
+  line-height: 3rem;
+  /* Shows more text when text too big to fit into cell */
+  padding-left: 0rem;
+  padding-right: 0rem;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Cells that can be interacted with */
+.table-drag-select td.cell-enabled {
+  background-color: #ddd;
+  /* Make the cursor a + symbol */
+  cursor: cell;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Cells that cannot be interacted with */
+.table-drag-select td.cell-disabled {
+  /* Put yer css here */
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+/* Cells that have been selected */
+.table-drag-select td.cell-selected {
+  background-color: blueviolet;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Cells that are in the process of being selected */
+.table-drag-select td.cell-being-selected {
+  /* This is the blue color you see when you select text with the cursor */
+  background-color: #3f83d5;
 }
