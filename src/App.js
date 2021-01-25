@@ -423,7 +423,7 @@ export default function App() {
     // an array of 8 arrays, the first array represents the times,
     // every first element in the next 7 arrays represents the day of the week (mon,tues,wed....)
     // 48 cells for every day 2nd cell in array represents 1am last cell representing 12:30am
-    console.log(cells, "cells");
+    // console.log(cells, "cells");
     const businessHours = {
       monday: [],
       tuesday: [],
@@ -433,31 +433,44 @@ export default function App() {
       saturday: [],
       sunday: [],
     };
+
     for (let i = 1; i < cells.length; i++) {
-      let j = 0;
-      let obj = {};
       if (cells[i].includes(true)) {
+        // i refers to day of week
         for (let k = 0; k < cells[i].length; k++) {
+          // is the element at that index true
           if (cells[i][k] === true) {
-            obj.start = tableLookup[i][k].time;
-            break;
+            // if so, is there a last element in the businessHours at day array and the last element's end is equal to the current start,
+            const indexToDay = businessHours[tableLookup[i][k].day];
+            if (
+              indexToDay[indexToDay.length - 1]?.end ===
+              tableLookup[i][k].time.start
+            ) {
+              //  if so copy the current end into businessHours end,
+              indexToDay[indexToDay.length - 1].end =
+                tableLookup[i][k].time.end;
+            } else {
+              if (!indexToDay.includes(tableLookup[i][k].time)) {
+                //otherwise push that start/end time into the  business hours array
+                indexToDay.push(tableLookup[i][k].time);
+              }
+            }
           }
         }
-        while (j < cells[i].length) {
-          if (cells[i][j] === true) obj.end = tableLookup[i][j + 1].time;
-          j++;
-        }
-        if (i === 1) {
-          businessHours.monday.push(obj);
-          console.log(businessHours.monday, "mmonday");
-        }
-        if (i === 2) {
-          businessHours.tuesday.push(obj);
-        }
       }
+      // remove any objects with duplicate end times
+      businessHours[tableLookup[i][0].day] = [
+        ...businessHours[tableLookup[i][0].day]
+          .reduce(
+            (itemsMap, item) =>
+              itemsMap.has(item.end) ? itemsMap : itemsMap.set(item.end, item),
+            new Map()
+          )
+          .values(),
+      ];
     }
     setCells(cells);
-    console.log(businessHours, "b hours");
+    console.log(businessHours, "final output");
   };
 
   const handleClick = () => {
