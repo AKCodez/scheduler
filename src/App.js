@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import TableDragSelect from "react-table-drag-select";
 import "./App.css";
 import { tableLookup } from "./tableLookup";
+import Fab from "@material-ui/core/Fab";
+
 const cellsReset = [
   [
     false,
@@ -418,8 +420,17 @@ const cellsReset = [
     false,
   ],
 ];
-export default function App() {
+export default function App({ formik }) {
   const [cells, setCells] = useState(cellsReset);
+  const [week, setWeek] = useState({
+    monday: "",
+    tuesday: "",
+    wednesday: "",
+    thursday: "",
+    friday: "",
+    saturday: "",
+    sunday: "",
+  });
 
   function handleChange(cells) {
     const businessHours = {
@@ -457,15 +468,97 @@ export default function App() {
       }
     }
     setCells(cells);
-    console.log(businessHours, "final output");
-    // console.log(cells, "cells");
+    // console.log(businessHours, 'final output');
+    // const mon = businessHours.monday;
+    // if (mon.length >= 1) {
+    //   let mondayStr = '';
+    //   for (let i = 0; i < mon.length; i++) {
+    //     i + 1 === mon.length
+    //       ? (mondayStr += ` ${mon[i].start} - ${mon[i].end}`)
+    //       : (mondayStr += ` ${mon[i].start} - ${mon[i].end}, `);
+    //   }
+    //   setMonday(mondayStr);
+    // } else {
+    //   setMonday('');
+    // }
+    const daysOfWeek = [
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+      "sunday",
+    ];
+    console.log(businessHours, "hours for business ");
+    for (let i = 0; i < daysOfWeek.length; i++) {
+      if (businessHours[daysOfWeek[i]].length >= 1) {
+        // console.log(businessHours[daysOfWeek[i]], 'in for loop ');
+        let timeString = "";
+        for (let j = 0; j < businessHours[daysOfWeek[i]].length; j++) {
+          j + 1 === businessHours[daysOfWeek[i]].length
+            ? (timeString += ` ${businessHours[daysOfWeek[i]][j]?.start} - ${
+                businessHours[daysOfWeek[i]][j]?.end
+              }`)
+            : (timeString += ` ${businessHours[daysOfWeek[i]][j]?.start} - ${
+                businessHours[daysOfWeek[i]][j]?.end
+              },`);
+        }
+
+        daysOfWeek[i] === "monday" && setWeek({ ...week, monday: timeString });
+        daysOfWeek[i] === "tuesday" &&
+          setWeek({ ...week, tuesday: timeString });
+        daysOfWeek[i] === "wednesday" &&
+          setWeek({ ...week, wednesday: timeString });
+        daysOfWeek[i] === "thursday" &&
+          setWeek({ ...week, thursday: timeString });
+        daysOfWeek[i] === "friday" && setWeek({ ...week, friday: timeString });
+        daysOfWeek[i] === "saturday" &&
+          setWeek({ ...week, saturday: timeString });
+        daysOfWeek[i] === "sunday" && setWeek({ ...week, sunday: timeString });
+      }
+    }
   }
+  //   console.log(week, 'week object of strings');
   const handleClick = () => {
     setCells(cellsReset);
+    // setMonday('');
   };
   return (
     <>
-      <div style={{ marginTop: "100px" }}>
+      <div style={{ marginTop: "10px" }}>
+        {!!week.monday.length && (
+          <div
+            style={{
+              position: "absolute",
+              top: "100px",
+              left: "240px",
+              backgroundColor: "lightblue",
+              borderRadius: "15px",
+              pointerEvents: "none",
+              flexWrap: "nowrap",
+              opacity: "0.9",
+            }}
+          >
+            {week.monday}
+          </div>
+        )}
+        {!!week.tuesday.length && (
+          <div
+            style={{
+              position: "absolute",
+              top: "130px",
+              left: "240px",
+              backgroundColor: "lightblue",
+              borderRadius: "15px",
+              pointerEvents: "none",
+              flexWrap: "nowrap",
+              opacity: "0.9",
+            }}
+          >
+            {week.tuesday}
+          </div>
+        )}
         <TableDragSelect value={cells} onChange={handleChange}>
           <tr>
             <td disabled />
